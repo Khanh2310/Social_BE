@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import { connectToDB } from './db/connectToDB.js';
-import { signupUser } from './controllers/userController.js';
+import userRouter from './router/userRouter.js';
 dotenv.config();
 connectToDB();
 const app = express();
@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true })); // To parse form data in the re
 app.use(cookieParser());
 
 // Routes
-app.use('/api/users', signupUser);
+app.use('/api/users', userRouter);
 app.listen(PORT, () =>
   console.log(`Server started at https://localhost:${PORT}`)
 );
