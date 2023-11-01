@@ -150,6 +150,7 @@ const updateUser = async (req, res) => {
     console.log('Error in updateUser', err.message);
   }
 };
+
 const getUserProfile = async (req, res) => {
   // We will fetch user profile either with username or userId
   // query is either username or userId
@@ -178,6 +179,7 @@ const getUserProfile = async (req, res) => {
     console.log('Error in getUserProfile: ', err.message);
   }
 };
+
 export {
   signupUser,
   signInUser,
