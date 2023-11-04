@@ -1,13 +1,13 @@
-import User from '../modules/userModules.js';
-import bcrypt from 'bcryptjs';
-import generateTokenAndSetCookie from '../utils/helpers/generateTokenAndSetCookie.js';
-import mongoose from 'mongoose';
+import User from "../modules/userModules.js";
+import bcrypt from "bcryptjs";
+import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js";
+import mongoose from "mongoose";
 const signupUser = async (req, res) => {
   try {
     const { name, email, username, password } = req.body;
     const user = await User.findOne({ $or: [{ email }, { username }] });
     if (user) {
-      return res.status(400).json({ error: 'User already exists' });
+      return res.status(400).json({ error: "User already exists" });
     }
 
     // / use salt to hash password
@@ -35,7 +35,7 @@ const signupUser = async (req, res) => {
         username: newUser.username,
       });
     } else {
-      res.status(400).json({ error: 'Invalid user data' });
+      res.status(400).json({ error: "Invalid user data" });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -49,10 +49,10 @@ const signInUser = async (req, res) => {
     const user = await User.findOne({ username });
     const isPasswordCorrect = await bcrypt.compare(
       password,
-      user?.password || ''
+      user?.password || ""
     );
     if (!user || !isPasswordCorrect) {
-      return res.status(400).json({ error: 'Invalid username or password' });
+      return res.status(400).json({ error: "Invalid username or password" });
     }
     generateTokenAndSetCookie(user._id, res);
     res.status(200).json({
@@ -63,19 +63,19 @@ const signInUser = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: err.message });
-    console.log('Error in Login: ', err.message);
+    console.log("Error in Login: ", err.message);
   }
 };
 
 const logoutUser = async (req, res) => {
   try {
-    res.cookie('jwt', '', { maxAge: 1 });
-    res.status(200).json({ message: 'User logged out successfully' });
+    res.cookie("jwt", "", { maxAge: 1 });
+    res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
     res.status(500).json({
       error: err.message,
     });
-    console.log('Error in signupUser', err.message);
+    console.log("Error in signupUser", err.message);
   }
 };
 
@@ -88,10 +88,10 @@ const followUser = async (req, res) => {
     if (id === req.user._id.toString())
       return res
         .status(400)
-        .json({ error: 'You cannot follow/unfollow yourself' });
+        .json({ error: "You cannot follow/unfollow yourself" });
 
     if (!userToModify || !currentUser)
-      return res.status(400).json({ error: 'User not found' });
+      return res.status(400).json({ error: "User not found" });
 
     const isFollowing = currentUser.follwings.includes(id);
 
@@ -99,16 +99,16 @@ const followUser = async (req, res) => {
       // Unfollow user
       await User.findByIdAndUpdate(id, { $pull: { followers: req.user._id } });
       await User.findByIdAndUpdate(req.user._id, { $pull: { follwings: id } });
-      res.status(200).json({ message: 'User unfollowed successfully' });
+      res.status(200).json({ message: "User unfollowed successfully" });
     } else {
       // Follow user
       await User.findByIdAndUpdate(id, { $push: { followers: req.user._id } });
       await User.findByIdAndUpdate(req.user._id, { $push: { follwings: id } });
-      res.status(200).json({ message: 'User followed successfully' });
+      res.status(200).json({ message: "User followed successfully" });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
-    console.log('Error in followUnFollowUser: ', err.message);
+    console.log("Error in followUnFollowUser: ", err.message);
   }
 };
 
@@ -120,7 +120,7 @@ const updateUser = async (req, res) => {
     let user = await User.findById(userId);
     if (!user)
       return res.status(400).json({
-        error: 'User not found',
+        error: "User not found",
       });
     if (req.params.id !== userId.toString()) {
       return res.status(400).json({
@@ -147,7 +147,7 @@ const updateUser = async (req, res) => {
     res.status(500).json({
       error: err.message,
     });
-    console.log('Error in updateUser', err.message);
+    console.log("Error in updateUser", err.message);
   }
 };
 
@@ -162,21 +162,22 @@ const getUserProfile = async (req, res) => {
     //-updatedAt  is not get updatedAt
     if (mongoose.Types.ObjectId.isValid(query)) {
       user = await User.findOne({ _id: query })
-        .select('-password')
-        .select('-updatedAt');
+        .select("-password")
+        .select("-updatedAt");
     } else {
+      
       // query is username
       user = await User.findOne({
         username: query,
       })
-        .select('-password')
-        .select('-updatedAt');
+        .select("-password")
+        .select("-updatedAt");
     }
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (!user) return res.status(404).json({ error: "User not found" });
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
-    console.log('Error in getUserProfile: ', err.message);
+    console.log("Error in getUserProfile: ", err.message);
   }
 };
 
