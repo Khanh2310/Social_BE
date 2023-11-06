@@ -75,7 +75,7 @@ const logoutUser = async (req, res) => {
     res.status(500).json({
       error: err.message,
     });
-    console.log('Error in signupUser', err.message);
+    console.log('Error in logoutUser', err.message);
   }
 };
 
