@@ -1,9 +1,9 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import cookieParser from 'cookie-parser';
-import userRouter from './router/userRouter.js';
-import connectToDB from './db/connectToDB.js';
-import postsRouter from './router/postsRouter.js';
+import express from "express";
+import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import userRouter from "./router/userRouter.js";
+import connectToDB from "./db/connectToDB.js";
+import postsRouter from "./router/postsRouter.js";
 dotenv.config();
 connectToDB();
 const app = express();
@@ -14,10 +14,10 @@ app.use(express.urlencoded({ extended: true })); // To parse form data in the re
 app.use(cookieParser());
 
 // routerUser
-app.use('/api/users', userRouter);
+app.use("/api/users", userRouter);
 
 // routerPost
-app.use('/api/posts', postsRouter);
+app.use("/api/posts", postsRouter);
 app.listen(PORT, () =>
   console.log(`Server started at http://localhost:${PORT}`)
 );
