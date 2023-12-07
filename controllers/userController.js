@@ -138,6 +138,11 @@ const updateUser = async (req, res) => {
       user.password = hashedPassword;
     }
     if (profilePic) {
+      if (user.profilePic) {
+        await cloudinary.uploader.destroy(
+          user.profilePic.split('/').pop().split('.')[0]
+        );
+      }
       const uploadedResponse = await cloudinary.uploader.upload(profilePic);
       profilePic = uploadedResponse.secure_url;
     }
